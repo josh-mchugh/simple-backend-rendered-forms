@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+    <head>
+        <meta charset="UTF-8">
+        <title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE">Example</title>
+        <link type="text/css" rel="stylesheet" th:href="@{/bundle.css}" />
+        <script type="text/javascript" th:src="@{/main.js}"></script>
+    </head>
+    <body>
+        <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
+            <a class="navbar-brand col-sm-3 col-md-2 mr-0 ml-2">Examples</a>
+        </nav>
+        <div class="container-fluid">
+            <div class="row">
+                <main role="main" class="col-sm-12 p-3">
+                    <div layout:fragment="content"></div>
+                </main>
+            </div>
+        </div>
+        <div class="modal fade" id="pageModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content"></div>
+            </div>
+        </div>
+        <!--/* Menu Scripts */-->
+        <script type="text/javascript">
+            $(function() {
+                $(document).on("click", "[data-toggle='dropdown']", function() {
+                    $(this).find(".dropdown-menu:first").dropdown("toggle");
+                });
+            });
+        </script>
+        <!--/* Popover Scripts */-->
+        <script type="text/javascript">
+            $(function() {
+                $(document).on("click", "[data-toggle='popover']", function() {
+                    $(this).popover("toggle");
+                });
+            });
+        </script>
+        <!--/* Modal Scripts */-->
+        <script type="text/javascript">
+            $(function() {
+
+                var modal =$("#pageModal");
+                var modalContent = $(modal).find(".modal-content:first");
+
+                // Retrieve modal on element with 'data-modal-url' attribute
+                $(document).on("click", "[data-modal-url]", function() {
+                    var url = $(this).attr("data-modal-url");
+                    $.ajax({
+                        url: url,
+                        type: "GET"
+                    }).done(function(res){
+                        $(modalContent).html(res);
+                        $(modal).modal("show");
+                    }).fail(function(res){
+                        console.log("Unable to display modal content.");
+                    });
+                });
+
+                // Handle submit of modal form
+                $(modalContent).on("submit", "form", function(event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+
+                    // Disable submit button
+                    $(this).find("[type='submit']:first").attr("disabled", true);
+
+                    var formData = new FormData($(this)[0]);
+
+                    $.ajax({
+                        url: $(this).attr("action"),
+                        type: $(this).attr("method"),
+                        data: formData,
+                        processData: false,
+                        contentType: false
+                    }).done(function(res) {
+                        $(modalContent).html(res);
+                    }).fail(function() {
+                        console.log("Unable to submit modal form.");
+                    });
+
+                    return false;
+                });
+            });
+        </script>
+        <!--/* Reload Content Url Scripts */-->
+        <script type="text/javascript">
+            $(function() {
+
+                // Load content on page load content-urls containers
+                $("[data-content-url]").each(function(index, container) {
+                    $.ajax({
+                        url: $(container).attr("data-content-url") + window.location.search,
+                        type: "GET"
+                    }).done(function(res) {
+                        $(container).html(res);
+                    }).fail(function() {
+                        console.log("Unable to load content url.");
+                    });
+                });
+
+                // Reload event listener on content-id containers
+                $("[data-content-id]").each(function(index, container) {
+                    $(container).on("reload", function() {
+                        var form = $(container).find("form:first");
+                        $.ajax({
+                            url: form ? getUrl($(form).attr("action")) : $(container).attr("data-content-url"),
+                            type: "GET",
+                            data: form ? getParams(form) : null
+                        }).done(function(res) {
+                            $(container).html(res);
+                        }).fail(function() {
+                            console.log("Unable to reload content");
+                        });
+                    });
+                });
+
+                function getUrl(url) {
+                    if (window.location.search) {
+                        return url + window.location.search;
+                    }
+                    return url;
+                };
+
+                function getParams(form) {
+                    if (window.location.search) {
+                        return null;
+                    }
+                    return $(form).serialize();
+                };
+            });
+        </script>
+        <!--/* Ajax Table Content Scripts */-->
+        <script type="text/javascript">
+            $(function() {
+
+                function updateTable(container, url) {
+                    var form = $(container).find("form:first");
+                    $.ajax({
+                        url: url ? url : $(form).attr("action"),
+                        type: $(form).attr("method"),
+                        data: url ? null : $(form).serialize()
+                    }).done(function(res) {
+                        history.pushState({containerId: $(container).attr("data-content-id")}, document.title, "?" + $(this)[0].url.split("?")[1]);
+                        $(container).html(res);
+                    }).fail(function() {
+                        console.log("Unable to refresh table content");
+                    });
+                };
+
+                function getContainer(el) {
+                    return $(el).parents("[data-content-type='table']:first");
+                };
+
+                // Handle submit of table form
+                $(document).on("submit", "[data-content-type='table'] form", function(event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    updateTable(getContainer($(this)));
+                    return false;
+                });
+
+                // Handle table page selection
+                $(document).on("click", "[data-content-type='table'] form a.page-link", function(event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    updateTable(getContainer($(this)), $(this).attr("href"));
+                    return false;
+                });
+
+                // Handle table sort selection
+                $(document).on("click", "[data-content-type='table'] form th .sorted", function(event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    updateTable(getContainer($(this)), $(this).attr("href"));
+                    return false;
+                });
+
+                // Handle table form checkbox change
+                $(document).on("change", "[data-content-type='table'] form [type='checkbox']", function(event) {
+                    $(this).parents("form:first").submit();
+                });
+            });
+        </script>
+        <!--/* Ajax Inline Form Scripts */-->
+        <script type="text/javascript">
+            $(function() {
+                $(document).on("submit", "[data-content-type='inline-form'] form", function(event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+
+                    var container = $(this);
+                    $.ajax({
+                        url: $(this).attr("action"),
+                        type: $(this).attr("method"),
+                        data: $(this).serialize()
+                    }).done(function(res) {
+                        $(container).html(res);
+                    }).fail(function() {
+                        console.log("Unable to submit inline form");
+                    });
+
+                    return false;
+                });
+            });
+        </script>
+        <!--/* Navigation History Scripts */-->
+        <script type="text/javascript">
+            window.onpopstate = function(event) {
+
+                if (event.state && event.state.containerId) {
+
+                    var container = $("[data-content-id='" + event.state.containerId + "']");
+                    $.ajax({
+                        url: $(container).attr('data-content-url') + document.location.search,
+                        method: "GET"
+                    }).done(function(res) {
+                        $(container).html(res);
+                    }).fail(function() {
+                        console.log("Unable to reload navigation content");
+                    });
+
+                } else {
+
+                    var containers = $("[data-content-id]");
+                    $(containers).each(function() {
+                        var container = $(this);
+                        $.ajax({
+                            url: $(this).attr("data-content-url"),
+                            method: "GET"
+                        }).done(function(res) {
+                            $(container).html(res);
+                        }).fail(function() {
+                            console.log("Unable to reload navigation content");
+                        });
+                    });
+                }
+            };
+        </script>
+    </body>
+</html>

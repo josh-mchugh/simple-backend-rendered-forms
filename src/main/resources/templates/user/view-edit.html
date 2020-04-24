@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+    <head>
+        <title>User Edit</title>
+    </head>
+    <body layout:fragment="content">
+        <div class="container mt-5">
+            <div data-content-id="userEdit" data-content-type="inline-form" th:data-content-url="@{/user/__${id}__/edit}"></div>
+        </div>
+    </body>
+</html>

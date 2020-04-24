@@ -1,0 +1,72 @@
+// Font Awesome free
+$fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
+@import "~@fortawesome/fontawesome-free/scss/regular.scss";
+@import "~@fortawesome/fontawesome-free/scss/solid.scss";
+@import "~@fortawesome/fontawesome-free/scss/brands.scss";
+@import "~@fortawesome/fontawesome-free/scss/fontawesome.scss";
+
+// Bootstrap and Toastr
+@import "~bootstrap/scss/bootstrap.scss";
+@import "~toastr/toastr.scss";
+
+[role="main"] {
+    padding-top: 48px;
+}
+
+.sorted {
+
+    &:after{
+        display: inline-block;
+        font-family: "Font Awesome 5 Free";
+        font-weight: 900;
+        content: "\f0dc";
+        opacity: 0.8;
+        margin-left: 1em;
+	}
+
+    &.sorted-asc {
+        &:after {
+            content: "\f0de";
+        }
+    }
+
+	&.sorted-desc {
+	    &:after {
+	        content: "\f0dd";
+	    }
+	}
+}
+
+.filter {
+
+}
+
+.filter__header {
+    font-size: 1.3rem;
+    font-weight: 400;
+    color: #666;
+    margin-bottom: 0.55rem;
+}
+
+.filter__search {
+
+}
+
+.filter__status {
+
+}
+
+.status {
+
+}
+
+.status__title {
+    font-size: 1.1rem;
+    font-weight: 400;
+    color: #666;
+    margin-bottom: 1rem;
+}
+
+.status__option {
+
+}

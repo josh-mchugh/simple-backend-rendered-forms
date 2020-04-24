@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <body>
+        <form method="POST" th:action="@{/user/new}" th:object="${form}">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit User</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label class="required">Username</label>
+                            <input class="form-control" th:classappend="${#fields.hasErrors('username')} ? is-invalid" type="text" th:field="*{username}" placeholder="Username"/>
+                            <p class="text-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></p>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label class="required">Email</label>
+                            <input class="form-control" th:classappend="${#fields.hasErrors('email')} ? is-invalid" type="email" th:field="*{email}" placeholder="Email"/>
+                            <p class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label class="required">First Name</label>
+                            <input class="form-control" th:classappend="${#fields.hasErrors('firstName')} ? is-invalid" type="text" th:field="*{firstName}" placeholder="First Name"/>
+                            <p class="text-danger" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></p>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label class="required">Last Name</label>
+                            <input class="form-control" th:classappend="${#fields.hasErrors('lastName')} ? is-invalid" type="text" th:field="*{lastName}" placeholder="Last Name"/>
+                            <p class="text-danger" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-default" type="button" data-dismiss="modal">Close</button>
+                <button class="btn btn-primary" type="submit">Save</button>
+            </div>
+        </form>
+    </body>
+</html>

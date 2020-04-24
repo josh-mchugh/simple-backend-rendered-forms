@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <body>
+        <script type="text/javascript" th:inline="javascript">
+            $(function() {
+
+                // Hide modal if is show and remove modal content
+                var modal = $("#pageModal");
+                if ($(modal).is(":visible")) {
+                    $(modal).modal("hide");
+                    $(modal).find(".modal-content").html("");
+                }
+
+                // Display Toaster
+                [# th:if="${!#strings.isEmpty(type)}"]
+                    switch([[${type}]]) {
+                        case "SUCCESS":
+                            toastr.success([[${message}]]);
+                            break;
+                        case "INFO":
+                            toastr.info([[${message}]]);
+                            break;
+                        case "WARNING":
+                            toastr.warning([[${message}]]);
+                            break;
+                        case "ERROR":
+                            toastr.error([[${message}]]);
+                            break;
+                        default:
+                            toastr.info([[${message}]]);
+                            break;
+                    }
+                [/]
+
+                // Reload content
+                [# th:if="${event != null}"]
+                    $("[data-content-id='[(${event.id})]']").trigger([[${event.name}]]);
+                [/]
+            });
+        </script>
+    </body>
+</html>

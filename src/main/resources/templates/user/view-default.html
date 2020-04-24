@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+    <head>
+        <title>Users</title>
+    </head>
+    <body layout:fragment="content">
+        <div class="row align-items-center justify-content-between mx-5 mt-5">
+            <h1>Users Table</h1>
+            <div>
+                <button class="btn btn-primary d-inline-block" type="button" th:data-modal-url="@{/user/new}">
+                    <i class="fas fa-plus"></i>
+                    Add User
+                </button>
+            </div>
+        </div>
+        <div data-content-id="usersTable" data-content-type="table" th:data-content-url="@{/users}"></div>
+    </body>
+</html>
