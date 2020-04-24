@@ -2,6 +2,14 @@
 <html xmlns:th="http://www.thymeleaf.org">
     <body>
         <form method="POST" th:action="@{/user/__${id}__/edit}" th:object="${form}">
+            <div class="row mb-2">
+                <div class="col-sm-12 d-flex align-items-center justify-content-between">
+                    <h1>[[${form.firstName}]] [[${form.lastName}]]</h1>
+                    <div class="undo-btn" style="display: none;">
+                        <button class="btn btn-secondary mr-2 d-inline-block" type="button">Undo</button>
+                    </div>
+                </div>
+            </div>
             <div class="row">
                 <div class="col-sm-12">
                     <h4>Details</h4>
@@ -108,5 +116,33 @@
                 </div>
             </div>
         </form>
+        <script type="text/javascript">
+            $(function() {
+
+                var changes = [];
+
+                $("form :input").on("focus", function() {
+                    $(this).attr("oldValue", $(this).val());
+                });
+
+                $("form :input").on("blur", function(event) {
+                    if ($(this).attr("oldValue") !== $(this).val()) {
+                        changes.push({id: $(this).attr("id"), value: $(this).attr("oldValue")});
+                    }
+                    if(changes.length > 0) {
+                        $(".undo-btn").show();
+                    }
+                });
+
+                $(".undo-btn").on("click", function() {
+                    var lastState = changes[changes.length -1];
+                    $("#" + lastState.id).val(lastState.value);
+                    changes.splice(changes.length -1 , 1);
+                    if(changes.length < 1) {
+                        $(".undo-btn").hide();
+                    }
+                });
+            });
+        </script>
     </body>
 </html>
