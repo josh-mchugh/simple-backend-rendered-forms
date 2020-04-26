@@ -1,12 +1,12 @@
 ### Simple Thymeleaf Backend Rendering Application
 
 This is a simple self contained Spring Boot app to demonstrate backend rendering and validation with Thymeleaf. 
-Thymeleaf can make user input field validation easy with the use of jQuery as you can submit forms and re-render the form 
-after it has been validated on the backend. Pageable tables can also be handle simply with thymeleaf rendering as it's just HTML and CSS
-and no a lot of need for extensive javascript or javascript frameworks.
+Backend rendering can make input field validation easy with the use of ajax as you can submit forms and re-render the form 
+after it has been validated on the backend. Pageable tables can also be handled simply with backend rendering as it's just HTML and CSS
+and no need for a lot of extensive javascript or javascript libraries which are hard to customize.
 
-The use of jQuery's delegation and backend render of partial HTML reduces the complexity of app development as the view portion of the application 
-is just HTML and CSS and th validation logic is handled on the server.
+The use of jQuery's delegation and backend render of partial HTML reduces the complexity and increases the speed of application development as the view is just simple HTML and CSS. 
+The business logic for validation is contained to the backend and does not spill over to the frontend.
 
 Thymeleaf Extensions:
   - Layout templates: https://github.com/ultraq/thymeleaf-layout-dialect
